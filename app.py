@@ -98,10 +98,14 @@ def index():
                 progress_file = os.path.join(DOWNLOAD_DIR, 'progress.txt')
                 if os.path.exists(progress_file):
                     os.remove(progress_file)
+                # Check for cookies.txt in the app directory
+                cookies_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cookies.txt')
                 ytdlp_cmd = [
                     'yt-dlp', '-f', format_string, '-o', output_template, url,
                     '--progress', '--newline'
                 ]
+                if os.path.exists(cookies_path):
+                    ytdlp_cmd.extend(['--cookies', cookies_path])
                 def run_ytdlp():
                     filepath = None
                     with subprocess.Popen(ytdlp_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1) as proc:
