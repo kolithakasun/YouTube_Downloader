@@ -4,7 +4,7 @@ services:
     build: .
     container_name: yt-downloader
     ports:
-      - "5000:5000"
+      - "5020:5020"
     volumes:
       - ./yt_downloads:/app/downloads
     restart: unless-stopped
