@@ -74,7 +74,7 @@ def index():
                         err = err[:500] + '... (truncated)'
                     flash('yt-dlp output error: ' + err)
                     return redirect(url_for('index'))
-                # Show all video formats (including video-only)
+                # Show all video formats (even if audio is missing)
                 formats = [f for f in info['formats'] if f.get('vcodec') != 'none' and f.get('height')]
                 formats = sorted(formats, key=lambda x: x.get('height', 0), reverse=True)
                 if not formats:
@@ -82,10 +82,10 @@ def index():
                     return redirect(url_for('index'))
                 return render_template_string(QUALITY_FORM, formats=formats, url=url)
             else:
-                # Step 2: Download selected format using yt-dlp
+                # Step 2: Download selected format using yt-dlp (let yt-dlp merge video+audio)
                 os.makedirs('downloads', exist_ok=True)
                 result = subprocess.run([
-                    'yt-dlp', '-f', format_id, '-o', 'downloads/%(title)s.%(ext)s', url
+                    'yt-dlp', '-f', f'{format_id}+bestaudio/best', '-o', 'downloads/%(title)s.%(ext)s', url
                 ], capture_output=True, text=True)
                 if result.returncode != 0:
                     flash('yt-dlp error: ' + result.stderr)
