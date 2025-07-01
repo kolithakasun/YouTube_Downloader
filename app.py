@@ -106,6 +106,9 @@ def index():
                 ]
                 if os.path.exists(cookies_path):
                     ytdlp_cmd.extend(['--cookies', cookies_path])
+                # Set a Chrome user-agent to mimic a real browser
+                chrome_ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+                ytdlp_cmd.extend(['--user-agent', chrome_ua])
                 def run_ytdlp():
                     filepath = None
                     with subprocess.Popen(ytdlp_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1) as proc:
